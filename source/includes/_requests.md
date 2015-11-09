@@ -1,9 +1,11 @@
 API Requests
 ====================
-Every API request to the Causemo services must include the following or it will be rejected.
+The only format accepted by Causemo API service is JSON; JSON in and JSON out.
+## Required Header Fields
+Every API request to the Causemo must include the following header fields or it wil be rejected:
 
-## Header Fields
 Parameter | Required | Description
 --------- | ------- | -----------
 api-version | true | API version to use
-Authorization | true | The authorization to use. Read [Authentication](#authentication) for info
+Authorization | true | The authorization to use. Read [Authentication](#authentication) for info. If using the `curl` command, it will add the header for you via the `-u` flag.
+
