@@ -69,7 +69,7 @@ sourceApp | false | String | String of the app which request is coming from
 
 ## Creative - Donation Submission
 ```shell
-curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"sessionId": "<SESSION_ID>","email":"miguel-test@causemo.com", "amount": "10", "source": "My Web App", "user": {"firstName":"miguel", "lastName":"Doe"}}' "https://qa.api.causemo.com/web/creatives/<CREATIVE_ID>/donation/submit" -u <PUBLIC_KEY>:<SECRET_KEY>
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"sessionId": "<SESSION_ID>","email":"miguel-test@causemo.com", "amount": "10", "source": "My Web App", "user": {"firstName":"miguel", "lastName":"Doe"}}' https://qa-api.causemo.com/web/creatives/<CREATIVE_ID>/donation/submit -u <PUBLIC_KEY>:<SECRET_KEY>
 ```
 
 > Replace `PUBLIC_KEY` with your public key
