@@ -38,6 +38,70 @@ Parameter | Required | Type | Description
 --------- | ------- | ------- | -----------
 sessionId | true | String | The sessionId returned from session init call
 
+## Cause Profiles - Fetch Profile
+```shell
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" -d '{"sessionId":"<SESSION_ID>"}' https://qa-api.causemo.com/web/cause-profiles/<PROFILE_NAME> -u <PUBLIC_KEY>:
+```
+
+> Replace `PUBLIC_KEY` with your public key
+
+> Replace `SESSION_ID` with a id from session initialize
+
+> Replace `PROFILE_NAME` with a cause profile name
+
+**PUBLIC** endpoint to fetch cause profile and any active campaigns
+
+### [GET] `web/cause-profiles/:profileName`
+
+### Param Fields
+Parameter | Required | Type | Description
+--------- | ------- | ------- | -----------
+sessionId | true | String | The sessionId returned from session init call
+
+## Cause Profiles - Fetch Creative
+```shell
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" -d '{"sessionId":"<SESSION_ID>"}' https://qa-api.causemo.com/web/cause-profiles/<PROFILE_NAME>/<CREATIVE_ID> -u <PUBLIC_KEY>:
+```
+
+> Replace `PUBLIC_KEY` with your public key
+
+> Replace `SESSION_ID` with a id from session initialize
+
+> Replace `PROFILE_NAME` with a cause profile name
+
+> Replace `CREATIVE_ID` with a creative id from a running campaign for this cause
+
+**PUBLIC** endpoint to fetch creative and campaign information. If the creative is no longer active *but* the campaign is still active, it will return a different creative associated to the campaign. If the campaign is no longer active, it will return empty values.
+
+### [GET] `web/cause-profiles/:profileName/:creativeId`
+
+### Param Fields
+Parameter | Required | Type | Description
+--------- | ------- | ------- | -----------
+sessionId | true | String | The sessionId returned from session init call
+
+## Cause Profiles - Token Creative 
+```shell
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" -d '{"sessionId":"<SESSION_ID>"}' https://qa-api.causemo.com/web/cause-profiles/<PROFILE_NAME>/token/<SESSION_TOKEN> -u <PUBLIC_KEY>:
+```
+
+> Replace `PUBLIC_KEY` with your public key
+
+> Replace `SESSION_ID` with a id from session initialize
+
+> Replace `PROFILE_NAME` with a cause profile name
+
+> Replace `SESSION_TOKEN` with a session token
+
+**PUBLIC** endpoint to fetch creative and campaign information using a session token. This is similar to `Fetch Creative`, except it uses a token to load creative. Session tokens are used in emails or social shares. 
+
+### [GET] `web/cause-profiles/:profileName/token/:sessionTokenId`
+
+### Param Fields
+Parameter | Required | Type | Description
+--------- | ------- | ------- | -----------
+sessionId | true | String | The sessionId returned from session init call
+
 ## Creatives - Fetch
 ```shell
 curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36","referralId":"", "user": {"gender":"female","dob":"1981","state":"MA"}}' https://qa-api.causemo.com/web/creatives -u <PUBLIC_KEY>:
@@ -112,7 +176,7 @@ curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"sessi
 
 > Replace `SECRET_KEY` with your secret key
 
-> Replace `SESSION_ID` with a valid session ID from the fetch creative call
+> Replace `SESSION_ID` with a valid session ID from the fetch creative or session init call
 
 > Replace `CREATIVE_ID` with a valid creative ID from the fetch creative call
 
@@ -130,4 +194,22 @@ sourceApp | false | String | String of the app which request is coming from
 device | false | JSON | A JSON object representing a device associated with this request 
 user | false | JSON | A JSON object representing a user associated with this request 
 referralCode | false | String | A referral associated with the request
+
+## Session - Initialize
+```shell
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36", "previousSessionId": "", "referralCode": ""}' https://qa-api.causemo.com/web/sessions/initialize -u <PUBLIC_KEY>:
+```
+
+> Replace `PUBLIC_KEY` with your public key
+
+**PUBLIC** endpoint to initialize a session. The sessionId returned should be used for all the subsequent calls made during this user session. 
+
+### [POST] `web/sessions/initialize`
+
+### Body Fields
+Parameter | Required | Type | Description
+--------- | ------- | ------- | -----------
+userAgent | true | String | The user agent string value
+previousSessionId | false | String | The previous session id, if one is available
+referralCode | false | String | A referral code associated with the request
 

@@ -5,7 +5,7 @@ If your application is not referencing Causemo users directly, then you can use 
 
 All clients are given `public` and `private` keys. The public keys can be passed around on UIs. Public keys maybe visible to end-users and for this reason only certain endpoints are accessible with only `public` keys. On the otherhand, `private` keys must always remain private and should always remain on your servers; never transmitted or packaged into the front end applications, as users might see it. You should never reveal what your private key is, otherwise, end-users can access `private` endpoints on your behalf. If you feel that your keys have been compramised, please contact Causemo to reset your keys.
 
-All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication will also fail.
+All API requests must be made over HTTPS. Calls made over plain HTTP will be redirected to HTTPS. API requests without authentication will fail.
 
 ## Clients
 Applications accessing/using Causemo API are consided 'clients' since they are consuming the provided API. Each client has a public and private key. The private key should **always** remain private. If a key is compromised, Causemo is able to disable access to the API for that particular key and generate another for the compromised client. 
