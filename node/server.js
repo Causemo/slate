@@ -14,10 +14,10 @@ var setupServer = function setupServer() {
     var clustermode = isTrue(nconf.get('server_cluster'));
     if (cluster.isMaster && clustermode) {
         // setup cluster
-        require('./config/cluster-setup')(logger);
+        require('./config/cluster-setup')();
     } else {
         // Init the express application
-        var app = require('./config/express')(logger);
+        var app = require('./config/express')();
 
         var http = require('http');
         http.globalAgent.maxSockets = 100;
@@ -34,15 +34,15 @@ var setupServer = function setupServer() {
             https.globalAgent.maxSockets = 100;
             var httpsPort = nconf.get('https_port');
             app.set('port', httpsPort);
-            logger.info('Listening HTTPS on: ' + httpsPort);
+            console.info('Listening HTTPS on: ' + httpsPort);
             https.createServer(options, app).listen(httpsPort);
 
             var redirectApp = require('./config/express_https_redirect')();
-            logger.info('Listening HTTP on: ' + httpPort);
+            console.info('Listening HTTP on: ' + httpPort);
             http.createServer(redirectApp).listen(httpPort);
         } else {
             app.set('port', httpPort);
-            logger.info('Listening HTTP on: ' + httpPort);
+            console.info('Listening HTTP on: ' + httpPort);
             http.createServer(app).listen(httpPort);
         }
     }
