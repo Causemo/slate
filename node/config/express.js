@@ -2,8 +2,7 @@ var express = require('express'),
     compress = require('compression'),
     helmet = require('helmet'),
     favicon = require('serve-favicon'),
-    serverRoot = nconf.get('server_root'),
-	reqUtils = require('app-common').requestUtils;
+	serverRoot = nconf.get('server_root');
 
 module.exports = function () {
 
@@ -29,12 +28,12 @@ module.exports = function () {
     app.disable('x-powered-by');
 
     app.use(function (req, res) {
-        return reqUtils.handleError(res, {message: 'endpoint not found', httpStatus: 404});
+        res.status(404).send({message: 'endpoint not found', httpStatus: 404});
     });
 
     app.use(function (err, req, res, next) { // jshint ignore:line
         if (res && !res.errorHandled) {
-            reqUtils.handleError(res, err);
+        	res.status(500).send(err);
         }
         logger.error(err);
     });
