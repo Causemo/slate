@@ -1,7 +1,9 @@
 // initialize nconf configuration
 var nconf = require('./config/nconf-config')();
-var utils = require('app-common').utils;
-if (utils.isTrue(nconf.get('newrelic_enabled'))) {
+var isTrue = function isTrue(value) {
+	return value === 'true' || value === true;
+};
+if (isTrue(nconf.get('newrelic_enabled'))) {
     // setup newrelic
     global.newrelic = require('newrelic');
 }
@@ -9,7 +11,7 @@ if (utils.isTrue(nconf.get('newrelic_enabled'))) {
 var cluster = require('cluster');
 
 var setupServer = function setupServer() {
-    var clustermode = utils.isTrue(nconf.get('server_cluster'));
+    var clustermode = isTrue(nconf.get('server_cluster'));
     if (cluster.isMaster && clustermode) {
         // setup cluster
         require('./config/cluster-setup')(logger);
@@ -21,7 +23,7 @@ var setupServer = function setupServer() {
         http.globalAgent.maxSockets = 100;
         var httpPort = nconf.get('server_port');
 
-        if (utils.isTrue(nconf.get('ssl_enabled'))) {
+        if (isTrue(nconf.get('ssl_enabled'))) {
             var https = require('https');
             var fs = require('fs');
             var options = {

@@ -1,5 +1,4 @@
 var express = require('express');
-var reqUtils = require('app-common').requestUtils;
 
 module.exports = function () {
 
@@ -11,7 +10,7 @@ module.exports = function () {
     });
 
     app.use(function (req, res) {
-        return reqUtils.handleError(res, {message: 'should not reach here!', httpStatus: 500});
+        res.status(500).send({message: 'should not reach here!', httpStatus: 500});
     });
 
     return app;

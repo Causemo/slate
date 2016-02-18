@@ -23,14 +23,16 @@ module.exports = function () {
     // 4. default values - our dev values
     var nconfDefaults = {
         server_root: rootPath,
-        server_cluster: true,
+        server_cluster: false,
         server_port: 3000,
-        //SSL
         ssl_enabled: false,
         https_port: 443,
         ssl_crt: '/causemo_ssl/ssl.crt',
         ssl_key: '/causemo_ssl/ssl.key',
         ssl_ca: '/causemo_ssl/ssl.ca',
+        newrelic_app_name: 'docs-server',
+        newrelic_enabled: false,
+        newrelic_key: ''
     };
 
     nconf.defaults(nconfDefaults);
