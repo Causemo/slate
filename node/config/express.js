@@ -1,6 +1,7 @@
 var express = require('express'),
     compress = require('compression'),
     helmet = require('helmet'),
+    path = require('path'),
     favicon = require('serve-favicon'),
     nconf = require('nconf'),
 	serverRoot = nconf.get('server_root');
@@ -14,7 +15,7 @@ module.exports = function () {
 
     app.use(compress({
         filter: function (req, res) {
-            return (/json|text|javascript|css/).test(res.getHeader('Content-Type'));
+            return (/json|text|javascript|css|html/).test(res.getHeader('Content-Type'));
         },
         level: 9
     }));
