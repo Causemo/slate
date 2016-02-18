@@ -2,6 +2,7 @@ var express = require('express'),
     compress = require('compression'),
     helmet = require('helmet'),
     favicon = require('serve-favicon'),
+    serverRoot = nconf.get('server_root'),
 	reqUtils = require('app-common').requestUtils;
 
 module.exports = function () {
