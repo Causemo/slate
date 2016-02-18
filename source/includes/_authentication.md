@@ -13,19 +13,78 @@ Applications accessing/using Causemo API are consided 'clients' since they are c
 A client also has a provided `scope` which limits a client access to a particular area in the Causemo API. Scopes are:
 
 * `app`: Clients are limited to App API
-* `sdk`: Clients are limited to SDK API
 * `web`: Clients are limited to Web API
 
 ## Basic Flow
 ```shell
-curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://qa-api.causemo.com/web/clients/me -u <PUBLIC_KEY>:
+# Fetch your client info:
+# Replace `PUBLIC_KEY` with your public key
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/web/clients/me -u <PUBLIC_KEY>:
 ```
+Authentication to the API is performed via HTTP Basic Auth. For **public** endpoints, provide your **public** API key as the basic auth username value and no password. Remember to still include the trailing **:**, this will use empty password, otherwise you will be prompted for a password. 
 
-> Replace `PUBLIC_KEY` with your public key
+For **private** endpoints, provide both your **public** API key as the basic auth username value **and** **private** key as the basic auth password. This API document will flag an endpoint as **public** or **private**. 
 
-Authentication to the API is performed via HTTP Basic Auth. For `public` endpoints, provide your `public` API key as the basic auth username value and no password. Remember to still include the trailing `:`, this will use empty password, otherwise you will be prompted for a password. 
+## Authentication Endpoints
+Contains all endpoints related to the API clients.
+### - Authenticate
+```shell
+# Replace `PUBLIC_KEY` with your public key
+# Replace `PRIVATE_KEY` with your private key
+# Replace `USER` with user email
+# Replace `PASSWORD` with user password
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" "https://qa-api.causemo.com/auth/token?grant_type=password&username=<USER>&password=<PASSWORD>" -u <PUBLIC_KEY>:<PRIVATE_KEY>
+```
+```javascript
+// NOTE: your client must be "priveleged" to be able to authenticate a user
+var AuthenticationAPI = require('causemo-api-client').authenticationAPI;
+var requestIp = require('request-ip'); 
+var ipAddress = requestIp.getClientIp(req); // get the user API address
+return AuthenticationAPI.authenticate(email, password, ipAddress)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Generates a token for the provided user. The Client must also be priveleged to call this endpoint, meaning, Causemo trust the client to authenticate users on their side.
 
-For `private` endpoints, provide both your `public` API key as the basic auth username value and `private` key as the basic auth password. This API document will flag an enpointd as `public` or `private`. 
+* **URL:** `/auth/token`
+* **METHOD:** POST
+* **TYPE:** private
 
-## OAuth Flow
-working on it...
+#### QUERY:
+Parameter | Required | Description
+--------- | ------- | -----------
+username | true | User email address
+password | true | User password
+grant_type | true | Value should be 'password'
+
+#### HEADERS:
+Parameter | Required | Description
+--------- | ------- | -----------
+x-causemo-client-ip | false | User IP address
+### - Logout
+```shell
+# Replace `PUBLIC_KEY` with your public key
+# Replace `AUTH_TOKEN` with the authentication token from the authenticate call
+curl -X DELETE -H "Content-Type: application/json" -H "api-version: 1" "https://qa-api.causemo.com/auth/token/<AUTH_TOKEN>" -u <PUBLIC_KEY>: 
+```
+```javascript
+// NOTE: your client must be "priveleged" to be able to authenticate a user
+var AuthenticationAPI = require('causemo-api-client').authenticationAPI;
+var requestIp = require('request-ip'); 
+var ipAddress = requestIp.getClientIp(req); // get the user API address
+return AuthenticationAPI.authenticate(email, password, ipAddress)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Logs out the user via deleting the provided tokenId. The token is the same token provided in the the authentication call.
+
+* **URL:** `/auth/token/:tokenId`
+* **METHOD:** DELETE
+* **TYPE:** public
+
+#### PATH:
+Parameter | Required | Description
+--------- | ------- | -----------
+tokenId | true | The token provided in the the authentication call
+
+

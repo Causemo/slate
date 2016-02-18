@@ -1,168 +1,49 @@
 ---
-title: API Reference
+title: Causemo API Reference
 
 language_tabs:
-  - shell
-  - ruby
-  - python
+  - {javascript: NodeJS Client}
+  - {shell: Shell}
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
+  - <a href='mailto:engineering@causemo.com?Subject=Documentation%20Question' target='_top'>Questions</a>
+  - <a href='mailto:engineering@causemo.com?Subject=Sign%20Up%20for%20a%20Developer%20Key' target='_top'>Sign Up for a Developer Key</a>
 
 includes:
+  - authentication
+  - requests
+  - web
   - errors
 
 search: true
 ---
 
-# Introduction
+Introduction
+====================
+This site contains documentation on how developers can integrate with Causemo API server. In order to use Causemo API, you must first receive API keys from Causemo. Send an email here to <a href='mailto:engineering@causemo.com?Subject=Sign%20Up%20for%20a%20Developer%20Key' target='_top'>engineering@causemo.com</a> to request a key.
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+We are constantly improving and adding to our documentations. So if you don't see answers to your questions, send us an email at <a href='mailto:engineering@causemo.com?Subject=Documentation%20Question' target='_top'>engineering@causemo.com</a>.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+## NodeJS API Client
+The NodeJS API client can be found on <a href="https://github.com/Causemo/causemo-api-client" target="_blank">github</a>. If you do not have access to the repository but feel that you should, please contact <a href='mailto:engineering@causemo.com?Subject=NodeJS%20API%20Client' target='_top'>engineering@causemo.com</a>
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+**Code snippets assumes the following:**
 
-# Authentication
+* **npm** installed
+  * nconf
+  * app-common
+  * causemo-api-client
+* **nconf** is setup with your environment variables
+  * causemo_public_key
+  * causemo_private_key
+  * causemo_api_server
 
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
+API Environments
+====================
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://qa-api.causemo.com/status
 ```
+We use one environment for testing and staging changes, located on `https://qa-api.causemo.com/` and our production environment is on `https://api.causemo.com/`. You will be given different keys which work on different environments. This document will reference only the QA environment. Once you are ready to go into production, you can replace the host to be our production host endpoint and use your production keys. To see the status of an environment, you can hit these endpoints:
 
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
+* QA: `https://qa-api.causemo.com/status` 
+* Production: `https://api.causemo.com/status` 
