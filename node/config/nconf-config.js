@@ -24,7 +24,13 @@ module.exports = function () {
     var nconfDefaults = {
         server_root: rootPath,
         server_cluster: true,
-        server_port: 3000
+        server_port: 3000,
+        //SSL
+        ssl_enabled: false,
+        https_port: 443,
+        ssl_crt: '/causemo_ssl/ssl.crt',
+        ssl_key: '/causemo_ssl/ssl.key',
+        ssl_ca: '/causemo_ssl/ssl.ca',
     };
 
     nconf.defaults(nconfDefaults);
