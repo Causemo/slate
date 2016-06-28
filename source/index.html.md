@@ -13,6 +13,7 @@ includes:
   - authentication
   - requests
   - web
+  - app
   - errors
 
 search: true
@@ -41,9 +42,9 @@ The NodeJS API client can be found on <a href="https://github.com/Causemo/causem
 API Environments
 ====================
 ```shell
-curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://qa-api.causemo.com/status
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/status
 ```
-We use one environment for testing and staging changes, located on `https://qa-api.causemo.com/` and our production environment is on `https://api.causemo.com/`. You will be given different keys which work on different environments. This document will reference only the QA environment. Once you are ready to go into production, you can replace the host to be our production host endpoint and use your production keys. To see the status of an environment, you can hit these endpoints:
+We use one environment for testing and staging changes, located on `https://dev-api.causemo.com/` and our production environment is on `https://api.causemo.com/`. You will be given different keys which work on different environments. This document will reference only the QA environment. Once you are ready to go into production, you can replace the host to be our production host endpoint and use your production keys. To see the status of an environment, you can hit these endpoints:
 
-* QA: `https://qa-api.causemo.com/status` 
+* QA: `https://dev-api.causemo.com/status` 
 * Production: `https://api.causemo.com/status` 

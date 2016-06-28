@@ -34,7 +34,7 @@ Contains all endpoints related to the API clients.
 # Replace `PRIVATE_KEY` with your private key
 # Replace `USER` with user email
 # Replace `PASSWORD` with user password
-curl -X POST -H "Content-Type: application/json" -H "api-version: 1" "https://qa-api.causemo.com/auth/token?grant_type=password&username=<USER>&password=<PASSWORD>" -u <PUBLIC_KEY>:<PRIVATE_KEY>
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" "https://dev-api.causemo.com/auth/token?grant_type=password&username=<USER>&password=<PASSWORD>" -u <PUBLIC_KEY>:<PRIVATE_KEY>
 ```
 ```javascript
 // NOTE: your client must be "priveleged" to be able to authenticate a user
@@ -50,6 +50,7 @@ Generates a token for the provided user. The Client must also be priveleged to c
 * **URL:** `/auth/token`
 * **METHOD:** POST
 * **TYPE:** private
+* **RETURN:** authentication token
 
 #### QUERY:
 Parameter | Required | Description
@@ -67,7 +68,7 @@ x-causemo-client-ip | false | User IP address
 ```shell
 # Replace `PUBLIC_KEY` with your public key
 # Replace `AUTH_TOKEN` with the authentication token from the authenticate call
-curl -X DELETE -H "Content-Type: application/json" -H "api-version: 1" "https://qa-api.causemo.com/auth/token/<AUTH_TOKEN>" -u <PUBLIC_KEY>: 
+curl -X DELETE -H "Content-Type: application/json" -H "api-version: 1" "https://dev-api.causemo.com/auth/token/<AUTH_TOKEN>" -u <PUBLIC_KEY>: 
 ```
 ```javascript
 var AuthenticationAPI = require('causemo-api-client').authenticationAPI;
@@ -80,6 +81,7 @@ Logs out the user via deleting the provided tokenId. The token is the same token
 * **URL:** `/auth/token/:tokenId`
 * **METHOD:** DELETE
 * **TYPE:** public
+* **RETURN:** empty
 
 #### PATH:
 Parameter | Required | Description
@@ -91,7 +93,7 @@ tokenId | true | The token provided in the the authentication call
 # Replace `PUBLIC_KEY` with your public key
 # Replace `PRIVATE_KEY` with your private key
 # Replace `EMAIL` with user email
-curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"email":"<EMAIL>"}' "https://qa-api.causemo.com/auth/forgot-password" -u <PUBLIC_KEY>:<PRIVATE_KEY>
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"email":"<EMAIL>"}' "https://dev-api.causemo.com/auth/forgot-password" -u <PUBLIC_KEY>:<PRIVATE_KEY>
 ```
 ```javascript
 var AuthenticationAPI = require('causemo-api-client').authenticationAPI;
@@ -104,6 +106,7 @@ Creates a token for the user to be able reset their password and emails it to th
 * **URL:** `/auth/forgot-password`
 * **METHOD:** POST
 * **TYPE:** private
+* **RETURN:** empty - token is sent via email
 
 #### BODY:
 Parameter | Required | Description
@@ -116,7 +119,7 @@ email | true | User email address
 # Replace `PRIVATE_KEY` with your private key
 # Replace `TOKEN` with user token value
 # Replace `PASSWORD` with new password value
-curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"password":"<PASSWORD>"}' "https://qa-api.causemo.com/auth/reset-password/<TOKEN>" -u <PUBLIC_KEY>:<PRIVATE_KEY>
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"password":"<PASSWORD>"}' "https://dev-api.causemo.com/auth/reset-password/<TOKEN>" -u <PUBLIC_KEY>:<PRIVATE_KEY>
 ```
 ```javascript
 var AuthenticationAPI = require('causemo-api-client').authenticationAPI;
@@ -126,10 +129,15 @@ return AuthenticationAPI.resetPassword(token, password)
 ```
 Resets the user password associated with the provided token to the given password. The token is then destroyed, since its a one-time use token.
 
-* **URL:** `/auth/reset-password`
+* **URL:** `/auth/reset-password/:tokenId`
 * **METHOD:** POST
 * **TYPE:** private
-* **RETURN:** email
+* **RETURN:** email address
+
+#### PATH:
+Parameter | Required | Description
+--------- | ------- | -----------
+tokenId | true | The token provided in the the forgot-password call
 
 #### BODY:
 Parameter | Required | Description

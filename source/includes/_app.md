@@ -1,0 +1,342 @@
+App API
+====================
+All API endpoints for App integration. Only clients with `scope` containing `app` can access these API endpoints.
+
+## Agency
+Contains all endpoints related to the API Agency.
+### - Fetch Current User Agencies
+```shell
+# Replace `PUBLIC_KEY` with your public key
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/agencies/me -u <PUBLIC_KEY>:
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var agencyApi = appAPI.agency; // get Agency endpoint 
+var authToken = ....;
+return agencyApi.me(authToken)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Fetches all the agencies the current user belongs to
+
+* **URL:** `/app/agencies/me`
+* **METHOD:** GET
+* **TYPE:** public
+
+### - Create a Cause
+```shell
+# Replace `agencyId` with the agency to create cause under
+# Replace `PUBLIC_KEY` with your public key
+# Replace `PRIVATE_KEY` with your private key
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"name": "Test Cause", "type": "charity"} https://dev-api.causemo.com/app/agencies/:agencyId/causes -u <PUBLIC_KEY>:<PRIVATE_KEY>
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var agencyApi = appAPI.agency; // get Agency endpoint 
+var cause = {name: 'Test Cause', type: 'charity'};
+var authToken = ....;
+return agencyApi.createCause(authToken, agencyId, cause)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Creates a cause under the specified agency
+
+* **URL:** `/app/agencies/:agencyId/causes`
+* **METHOD:** POST
+* **TYPE:** private
+
+#### BODY:
+Parameter | Required | Description
+--------- | ------- | -----------
+name | true | The cause name
+type | true | The cause type (ie: 'charity')
+description | false | A long description for the cause. This can be HTML text.
+shortDescription | false | A short description or slogan for a cause.
+category | false | An Array of String for cause categories.
+tmpLogo | false | The S3 temp location for the uploaded logo image
+tmpPaypalLogo | false | The S3 temp location for the uploaded paypal logo image
+tmpSquareLogo | false | The S3 temp location for the uploaded square logo image
+
+## Ad Groups
+Contains all endpoints related to the API AdGroup.
+### - Search
+```shell
+# Replace `PUBLIC_KEY` with your public key
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/ad-groups?size=15 -u <PUBLIC_KEY>:
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var adGroupApi = appAPI.adGroup; // get Client endpoint 
+var tableObj = {
+    'displayLength': 15,
+    'displayStart': 0,
+    'sortDir': 'asc',
+    'sortCol': 0',
+    'columns': 'id,name,status',
+    'echo': 1
+};
+var searchObj = {status: ['enabled'], search: 'test', causeId: 1234};
+var authToken = ....;
+return adGroupApi.search(authToken, tableObj, searchObj)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Executes a search for AdGroup
+
+* **URL:** `/app/ad-groups`
+* **METHOD:** GET
+* **TYPE:** public
+
+#### QUERY:
+Parameter | Required | Description
+--------- | ------- | -----------
+length | false | The search query limit (max 100)
+start | false | The start page (default is 0)
+sortDir | false | 'asc' or 'desc'
+sortCol | false | The column name to sort by
+query | false | String OR JSON String
+
+## Causes
+Contains all endpoints related to the API Cause.
+### - Search
+```shell
+# Replace `PUBLIC_KEY` with your public key
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/causes?size=15 -u <PUBLIC_KEY>:
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var causeApi = appAPI.cause; // get Cause endpoint 
+var tableObj = {
+    'displayLength': 15,
+    'displayStart': 0,
+    'sortDir': 'asc',
+    'sortCol': 0',
+    'columns': 'id,name,status',
+    'echo': 1
+};
+var searchObj = {status: ['enabled'], search: 'test'};
+var authToken = ....;
+return causeApi.search(authToken, tableObj, searchObj)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Executes a search for Cause. It will only return result sets which are part of the current user's Agencies.
+
+* **URL:** `/app/causes`
+* **METHOD:** GET
+* **TYPE:** public
+
+#### QUERY:
+Parameter | Required | Description
+--------- | ------- | -----------
+length | false | The search query limit (max 100)
+start | false | The start page (default is 0)
+sortDir | false | 'asc' or 'desc'
+sortCol | false | The column name to sort by
+query | false | String OR JSON String
+
+### - Get Cause
+```shell
+# Replace `:causeId` with a cause id
+# Replace `PUBLIC_KEY` with your public key
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/causes/:causeId -u <PUBLIC_KEY>:
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var causeApi = appAPI.cause; // get Cause endpoint 
+var causeId = ....;
+var authToken = ....;
+return causeApi.getCause(authToken, causeId)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Returns the request cause.
+
+* **URL:** `/app/causes/:causeId`
+* **METHOD:** GET
+* **TYPE:** public
+
+### - Update a Cause
+```shell
+# Replace `causeId` with the agency to create cause under
+# Replace `PUBLIC_KEY` with your public key
+# Replace `PRIVATE_KEY` with your private key
+curl -X PUT -H "Content-Type: application/json" -H "api-version: 1" -d '{"name": "Test Cause", "type": "charity"} https://dev-api.causemo.com/app/causes/:causeId -u <PUBLIC_KEY>:<PRIVATE_KEY>
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var causeApi = appAPI.cause; // get Cause endpoint 
+var cause = {name: 'Test Cause', type: 'charity'};
+var causeId = ....;
+var authToken = ....;
+return causeApi.updateCause(authToken, causeId, cause)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Updates the specified cause
+
+* **URL:** `/app/causes/:causeId`
+* **METHOD:** PUT
+* **TYPE:** private
+
+#### BODY:
+Parameter | Required | Description
+--------- | ------- | -----------
+name | true | The cause name
+type | true | The cause type (ie: 'charity')
+description | false | A long description for the cause. This can be HTML text.
+shortDescription | false | A short description or slogan for a cause.
+category | false | An Array of String for cause categories.
+tmpLogo | false | The S3 temp location for the uploaded logo image
+tmpPaypalLogo | false | The S3 temp location for the uploaded paypal logo image
+tmpSquareLogo | false | The S3 temp location for the uploaded square logo image
+
+### - Get Cause Config
+```shell
+# Replace `:causeId` with a cause id
+# Replace `PUBLIC_KEY` with your public key
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/causes/:causeId/config -u <PUBLIC_KEY>:
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var causeApi = appAPI.cause; // get Cause endpoint 
+var causeId = ....;
+var authToken = ....;
+return causeApi.getCauseConfig(authToken, causeId)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Returns the request cause configurations.
+
+* **URL:** `/app/causes/:causeId/config`
+* **METHOD:** GET
+* **TYPE:** public
+
+### - Update Cause Config
+```shell
+# Replace `causeId` with the agency to create cause under
+# Replace `PUBLIC_KEY` with your public key
+# Replace `PRIVATE_KEY` with your private key
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{} https://dev-api.causemo.com/app/causes/:causeId/config -u <PUBLIC_KEY>:<PRIVATE_KEY>
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var causeApi = appAPI.cause; // get Cause endpoint 
+var causeConfig = {};
+var causeId = ....;
+var authToken = ....;
+return causeApi.saveCauseConfig(authToken, causeId, causeConfig)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Updates the cause configuration
+
+* **URL:** `/app/causes/:causeId/config`
+* **METHOD:** POST
+* **TYPE:** private
+
+#### BODY:
+Parameter | Required | Description
+--------- | ------- | -----------
+causeWebsite | false | The cause website URL
+causemoMaskedUrl | false | The endpoint Causemo will be hosted from in the cause domain (ie: give.my-cause.org), without protocol ('http') or paths ('/something')
+causemoHostedUrl | false | The endpoint Causemo will be hosted from in the Causemo domain (ie: my-cause.causemo.com), without protocol ('http') or paths ('/something')
+facebookAppId | false | The cause facebook app id
+facebookPublicKey | false | The cause facebook public key
+facebookSecretKey | false | The cause facebook secret key
+useMgf | false | true/false if the cause should use MGF for collecting donations
+stripeBillingAddress | false | true/false whether the cause should collect billing address via Stripe
+
+### - Get Cause Page
+```shell
+# Replace `:causeId` with a cause id
+# Replace `PUBLIC_KEY` with your public key
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/causes/:causeId/page -u <PUBLIC_KEY>:
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var causeApi = appAPI.cause; // get Cause endpoint 
+var causeId = ....;
+var authToken = ....;
+return causeApi.getCausePage(authToken, causeId)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Returns the request cause page configurations.
+
+* **URL:** `/app/causes/:causeId/page`
+* **METHOD:** GET
+* **TYPE:** public
+
+### - Update Cause Page
+```shell
+# Replace `causeId` with the agency to create cause under
+# Replace `PUBLIC_KEY` with your public key
+# Replace `PRIVATE_KEY` with your private key
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{} https://dev-api.causemo.com/app/causes/:causeId/page -u <PUBLIC_KEY>:<PRIVATE_KEY>
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var causeApi = appAPI.cause; // get Cause endpoint 
+var causePage = {};
+var causeId = ....;
+var authToken = ....;
+return causeApi.saveCausePage(authToken, causeId, causePage)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Updates the cause page options
+
+* **URL:** `/app/causes/:causeId/page`
+* **METHOD:** POST
+* **TYPE:** private
+
+#### BODY:
+Parameter | Required | Description
+--------- | ------- | -----------
+headerColor | false | The color used for the header
+footerColor | false | The color used for the footer
+headerLinkColor | false | The color used for header links
+footerLinkColor | false | The color used for footer links
+pagePrimaryColor | false | The color used for page primary colors (ie: buttons)
+pageFontPrimaryColor | false | The color used for primary fonts/text
+pageFontSecondaryColor | false | The color used for secondary fonts/text
+buttonTextColor | false | The color used for button text
+progressBarCompletionColor | false | The color used for the progress bar completion
+progressBarCompletionTextColor | false | The color used for the progress bar completion text
+progressBarGoalColor | false | The color used for the progress bar
+progressBarGoalTextColor | false | The color used for the progress bar goal text
+primaryFontFamily | false | The primary font to use
+secondaryFontFamily | false | The secondary font to use
+socialSiteName | false | The social site name to give the page
+socialSiteTitle | false | The social site title to give the page
+socialSiteDescription | false | The social site description to give the page
+tmpSocialSiteImage | false | The temporary S3 location for the social site image
+twitterUrl | false | The cause twitter URL
+facebookUrl | false | The cause facebook URL
+instagramUrl | false | The cause instagram URL
+linkedInUrl | false | The cause linkedin URL
+contactNumber | false | The cause contact phone number
+contactEmail | false | The cause contact email address
+DonationConfig | false | A DonationConfig object for the cause page (attributes: minDonationAmount, defaultDonationAmount, donationAmountBtn1, donationAmountBtn2, donationAmountBtn3, donationAmountBtn4).
+CausePageLinks | false | An Array of CausePageLink (attributes: url, label, order).
+
+## Clients
+Contains all endpoints related to the API Client.
+### - Fetch Current Client
+```shell
+# Replace `PUBLIC_KEY` with your public key
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/clients/me -u <PUBLIC_KEY>:
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var clientAPI = appAPI.client; // get Client endpoint 
+return clientAPI.getMyClientInfo()
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Fetches the currently used client information
+
+* **URL:** `/app/clients/me`
+* **METHOD:** GET
+* **TYPE:** public
