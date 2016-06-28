@@ -71,7 +71,7 @@ var tableObj = {
     'displayLength': 15,
     'displayStart': 0,
     'sortDir': 'asc',
-    'sortCol': 0',
+    'sortCol': 0,
     'columns': 'id,name,status',
     'echo': 1
 };
@@ -110,7 +110,7 @@ var tableObj = {
     'displayLength': 15,
     'displayStart': 0,
     'sortDir': 'asc',
-    'sortCol': 0',
+    'sortCol': 0,
     'columns': 'id,name,status',
     'echo': 1
 };
