@@ -6,6 +6,8 @@ var express = require('express'),
     nconf = require('nconf'),
 	serverRoot = nconf.get('server_root');
 
+var statusResponse;
+	
 module.exports = function () {
 
     // Initialize express app
@@ -28,6 +30,17 @@ module.exports = function () {
     app.use(helmet.nosniff());
     app.use(helmet.ienoopen());
     app.disable('x-powered-by');
+
+    var handleStatus = function handleStatus(req, res) {
+        if (!statusResponse) {
+            statusResponse = {
+                status: 'running'
+            };
+        }
+        return res.status(200).send(statusResponse);
+    };
+	
+    app.route('/status').get(handleStatus);
 
     app.use(function (req, res) {
         res.status(404).send({message: 'endpoint not found', httpStatus: 404});
