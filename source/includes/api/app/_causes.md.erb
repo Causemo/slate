@@ -240,9 +240,65 @@ return causeApi.getCauseUsers(authToken, causeId)
   .then(console.log.bind(undefined))
   .catch(console.error.bind(undefined));
 ```
-Returns all the cause users for the specified cause.
+Returns all the cause users and pending invitations for the specified cause.
 
 * **URL:** `/app/causes/:causeId/users`
 * **METHOD:** GET
 * **TYPE:** private
+
+### - Invite Cause User
+```shell
+# Replace `:causeId` with a cause id
+# Replace `PUBLIC_KEY` with your public key
+# Replace `PRIVATE_KEY` with your private key
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"email","miguel@causemo.com"} https://dev-api.causemo.com/app/causes/:causeId/invites -u <PUBLIC_KEY>:<PRIVATE_KEY>
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var causeApi = appAPI.cause; // get Cause endpoint 
+var invitation = {email: 'miguel@causemo.com'};
+var causeId = ....;
+var authToken = ....;
+return causeApi.inviteCauseUser(authToken, causeId, invitation)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Creates a user invitation for the specified cause and sends out an email to the user.
+
+* **URL:** `/app/causes/:causeId/invites`
+* **METHOD:** POST
+* **TYPE:** private
+
+#### BODY:
+Parameter | Required | Description
+--------- | ------- | -----------
+email | true | The email address to send invite to
+firstName | false | User first name
+lastName | false | User last name
+title | false | User job title
+
+### - Resend Cause User Invitation
+```shell
+# Replace `:causeId` with a cause id
+# Replace `PUBLIC_KEY` with your public key
+# Replace `PRIVATE_KEY` with your private key
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{} https://dev-api.causemo.com/app/causes/:causeId/invites/:userInvitationId/send -u <PUBLIC_KEY>:<PRIVATE_KEY>
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var causeApi = appAPI.cause; // get Cause endpoint 
+var userInvitationId = ...;
+var causeId = ....;
+var authToken = ....;
+return causeApi.resendCauseUserInvite(authToken, causeId, userInvitationId)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Resends a user invitation.
+
+* **URL:** `/app/causes/:causeId/invites/:userInvitationId/send`
+* **METHOD:** POST
+* **TYPE:** private
+
+
 
