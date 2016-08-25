@@ -4,8 +4,8 @@ VOLUME /usr/src/app/source
 EXPOSE 3000
 
 RUN apt-get update && apt-get install -y wget
-	
-RUN wget -qO- https://deb.nodesource.com/setup_0.12 | bash -
+
+RUN wget -qO- https://deb.nodesource.com/setup_6.x | bash -
 
 RUN apt-get install -y nodejs git\
 && apt-get clean && rm -rf /var/lib/apt/lists/*
