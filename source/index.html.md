@@ -10,11 +10,11 @@ toc_footers:
   - <a href='mailto:engineering@causemo.com?Subject=Sign%20Up%20for%20a%20Developer%20Key' target='_top'>Sign Up for a Developer Key</a>
 
 includes:
-  - authentication
-  - requests
-  - web
-  - app
-  - errors
+  - api/authentication
+  - api/requests
+  - api/web
+  - api/app
+  - api/errors
 
 search: true
 ---

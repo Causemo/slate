@@ -1,100 +1,3 @@
-App API
-====================
-All API endpoints for App integration. Only clients with `scope` containing `app` can access these API endpoints.
-
-## Agency
-Contains all endpoints related to the API Agency.
-### - Fetch Current User Agencies
-```shell
-# Replace `PUBLIC_KEY` with your public key
-curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/agencies/me -u <PUBLIC_KEY>:
-```
-```javascript
-var appAPI = require('causemo-api-client').appAPI; // get app API
-var agencyApi = appAPI.agency; // get Agency endpoint 
-var authToken = ....;
-return agencyApi.me(authToken)
-  .then(console.log.bind(undefined))
-  .catch(console.error.bind(undefined));
-```
-Fetches all the agencies the current user belongs to
-
-* **URL:** `/app/agencies/me`
-* **METHOD:** GET
-* **TYPE:** public
-
-### - Create a Cause
-```shell
-# Replace `agencyId` with the agency to create cause under
-# Replace `PUBLIC_KEY` with your public key
-# Replace `PRIVATE_KEY` with your private key
-curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"name": "Test Cause", "type": "charity"} https://dev-api.causemo.com/app/agencies/:agencyId/causes -u <PUBLIC_KEY>:<PRIVATE_KEY>
-```
-```javascript
-var appAPI = require('causemo-api-client').appAPI; // get app API
-var agencyApi = appAPI.agency; // get Agency endpoint 
-var cause = {name: 'Test Cause', type: 'charity'};
-var authToken = ....;
-return agencyApi.createCause(authToken, agencyId, cause)
-  .then(console.log.bind(undefined))
-  .catch(console.error.bind(undefined));
-```
-Creates a cause under the specified agency
-
-* **URL:** `/app/agencies/:agencyId/causes`
-* **METHOD:** POST
-* **TYPE:** private
-
-#### BODY:
-Parameter | Required | Description
---------- | ------- | -----------
-name | true | The cause name
-type | true | The cause type (ie: 'charity')
-description | false | A long description for the cause. This can be HTML text.
-shortDescription | false | A short description or slogan for a cause.
-category | false | An Array of String for cause categories.
-tmpLogo | false | The S3 temp location for the uploaded logo image
-tmpPaypalLogo | false | The S3 temp location for the uploaded paypal logo image
-tmpSquareLogo | false | The S3 temp location for the uploaded square logo image
-
-## AdGroup
-Contains all endpoints related to the API AdGroup.
-### - Search
-```shell
-# Replace `PUBLIC_KEY` with your public key
-curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/ad-groups?size=15 -u <PUBLIC_KEY>:
-```
-```javascript
-var appAPI = require('causemo-api-client').appAPI; // get app API
-var adGroupApi = appAPI.adGroup; // get Client endpoint 
-var tableObj = {
-    'displayLength': 15,
-    'displayStart': 0,
-    'sortDir': 'asc',
-    'sortCol': 0,
-    'columns': 'id,name,status',
-    'echo': 1
-};
-var searchObj = {status: ['enabled'], search: 'test', causeId: 1234};
-var authToken = ....;
-return adGroupApi.search(authToken, tableObj, searchObj)
-  .then(console.log.bind(undefined))
-  .catch(console.error.bind(undefined));
-```
-Executes a search for AdGroup
-
-* **URL:** `/app/ad-groups`
-* **METHOD:** GET
-* **TYPE:** public
-
-#### QUERY:
-Parameter | Required | Description
---------- | ------- | -----------
-length | false | The search query limit (max 100)
-start | false | The start page (default is 0)
-sortDir | false | 'asc' or 'desc'
-sortCol | false | The column name to sort by
-query | false | String OR JSON String
 
 ## Causes
 Contains all endpoints related to the API Cause.
@@ -321,54 +224,25 @@ contactEmail | false | The cause contact email address
 DonationConfig | false | A DonationConfig object for the cause page (attributes: minDonationAmount, defaultDonationAmount, donationAmountBtn1, donationAmountBtn2, donationAmountBtn3, donationAmountBtn4).
 CausePageLinks | false | An Array of CausePageLink (attributes: url, label, order).
 
-## Clients
-Contains all endpoints related to the API Client.
-### - Fetch Current Client
+### - Get Cause Users
 ```shell
-# Replace `PUBLIC_KEY` with your public key
-curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/clients/me -u <PUBLIC_KEY>:
-```
-```javascript
-var appAPI = require('causemo-api-client').appAPI; // get app API
-var clientAPI = appAPI.client; // get Client endpoint 
-return clientAPI.getMyClientInfo()
-  .then(console.log.bind(undefined))
-  .catch(console.error.bind(undefined));
-```
-Fetches the currently used client information
-
-* **URL:** `/app/clients/me`
-* **METHOD:** GET
-* **TYPE:** public
-
-## Uploads
-Contains all endpoints related to the API Upload.
-### - Get Temporary Upload Keys
-```shell
+# Replace `:causeId` with a cause id
 # Replace `PUBLIC_KEY` with your public key
 # Replace `PRIVATE_KEY` with your private key
-curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/uploads/temporary -u <PUBLIC_KEY>:<PRIVATE_KEY>
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/causes/:causeId/users -u <PUBLIC_KEY>:<PRIVATE_KEY>
 ```
 ```javascript
 var appAPI = require('causemo-api-client').appAPI; // get app API
-var uploadAPI = appAPI.upload; // get Upload endpoint 
-var keepOriginalName = false; // Should we use the original filename or have the api client generate a random one. 
-var fileName = ....;
+var causeApi = appAPI.cause; // get Cause endpoint 
+var causeId = ....;
 var authToken = ....;
-return uploadAPI.temporaryUpload(authToken, fileName, keepOriginalName)
+return causeApi.getCauseUsers(authToken, causeId)
   .then(console.log.bind(undefined))
   .catch(console.error.bind(undefined));
 ```
-Fetches the AWS keys for uploading the specified file into Causemo temporary S3 folder. The NodeJS client library has a special parameter 'keepOriginalName', if this is true, it will send the passed in filename to the API server. However, in order to avoid AWS S3 errors, 'keepOriginalName' should be set to 'false'. This will ensure we generate a random file name, while perserving the file extension. 
+Returns all the cause users for the specified cause.
 
-* **URL:** `/app/uploads/temporary`
+* **URL:** `/app/causes/:causeId/users`
 * **METHOD:** GET
 * **TYPE:** private
-
-#### QUERY:
-Parameter | Required | Description
---------- | ------- | -----------
-fileName | true | The file name, should be unique to avoid clashes
-
-
 
