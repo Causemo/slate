@@ -20,18 +20,17 @@ Fetch current user information
 
 * **URL:** `/app/users/me`
 * **METHOD:** GET
-* **TYPE:** private
+* **TYPE:** public
 
 ### - Update Current User 
 ```shell
 # Replace `token` with your invitation token
 # Replace `PUBLIC_KEY` with your public key
-curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{...} https://dev-api.causemo.com/app/users/invites/:token -u <PUBLIC_KEY>:
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{...} https://dev-api.causemo.com/app/users/me -u <PUBLIC_KEY>:
 ```
 ```javascript
 var appAPI = require('causemo-api-client').appAPI; // get app API
 var userAPI = appAPI.user; // get User endpoint 
-var token = ....;
 var userObj = {...};
 return userAPI.updateCurrentUser(authToken, userObj)
   .then(console.log.bind(undefined))
@@ -41,7 +40,7 @@ Updates the current user information using the provided user object.
 
 * **URL:** `/app/users/me`
 * **METHOD:** POST
-* **TYPE:** private
+* **TYPE:** public
 
 #### BODY:
 Parameter | Required | Description
@@ -51,5 +50,26 @@ lastName | true | User last name
 title | false | User job title
 tmpAvatar | false | The temporary S3 location for the user avatar
 password | false | User password, only needed if password changed
+
+### - User Accept Invitation
+```shell
+# Replace `token` with your invitation token
+# Replace `PUBLIC_KEY` with your public key
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{...} https://dev-api.causemo.com/app/users/me/invites/:token -u <PUBLIC_KEY>:
+```
+```javascript
+var appAPI = require('causemo-api-client').appAPI; // get app API
+var userAPI = appAPI.user; // get User endpoint 
+var token = ....;
+return userAPI.acceptInvitation(authToken, token)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+The currently logged in user accepts the user invitation request.
+
+* **URL:** `/app/users/me/invites/:token`
+* **METHOD:** POST
+* **TYPE:** public
+
 
 
