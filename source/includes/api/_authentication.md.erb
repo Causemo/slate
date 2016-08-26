@@ -38,10 +38,11 @@ curl -X POST -H "Content-Type: application/json" -H "api-version: 1" "https://de
 ```
 ```javascript
 // NOTE: your client must be "priveleged" to be able to authenticate a user
-var AuthenticationAPI = require('causemo-api-client').authenticationAPI;
+var authenticationAPI = require('causemo-api-client').authenticationAPI;
 var requestIp = require('request-ip'); 
 var ipAddress = requestIp.getClientIp(req); // get the user API address
-return AuthenticationAPI.authenticate(email, password, ipAddress)
+var invitationToken = ....;
+return authenticationAPI.authenticate(email, password, ipAddress, invitationToken)
   .then(console.log.bind(undefined))
   .catch(console.error.bind(undefined));
 ```
@@ -72,8 +73,8 @@ x-causemo-client-ip | false | User IP address
 curl -X DELETE -H "Content-Type: application/json" -H "api-version: 1" "https://dev-api.causemo.com/auth/token/<AUTH_TOKEN>" -u <PUBLIC_KEY>: 
 ```
 ```javascript
-var AuthenticationAPI = require('causemo-api-client').authenticationAPI;
-return AuthenticationAPI.logout(authToken)
+var authenticationAPI = require('causemo-api-client').authenticationAPI;
+return authenticationAPI.logout(authToken)
   .then(console.log.bind(undefined))
   .catch(console.error.bind(undefined));
 ```
@@ -97,8 +98,8 @@ tokenId | true | The token provided in the the authentication call
 curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"email":"<EMAIL>"}' "https://dev-api.causemo.com/auth/forgot-password" -u <PUBLIC_KEY>:<PRIVATE_KEY>
 ```
 ```javascript
-var AuthenticationAPI = require('causemo-api-client').authenticationAPI;
-return AuthenticationAPI.forgotPassword(email)
+var authenticationAPI = require('causemo-api-client').authenticationAPI;
+return authenticationAPI.forgotPassword(email)
   .then(console.log.bind(undefined))
   .catch(console.error.bind(undefined));
 ```
@@ -123,8 +124,8 @@ email | true | User email address
 curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{"password":"<PASSWORD>"}' "https://dev-api.causemo.com/auth/reset-password/<TOKEN>" -u <PUBLIC_KEY>:<PRIVATE_KEY>
 ```
 ```javascript
-var AuthenticationAPI = require('causemo-api-client').authenticationAPI;
-return AuthenticationAPI.resetPassword(token, password)
+var authenticationAPI = require('causemo-api-client').authenticationAPI;
+return authenticationAPI.resetPassword(token, password)
   .then(console.log.bind(undefined))
   .catch(console.error.bind(undefined));
 ```
@@ -145,5 +146,51 @@ Parameter | Required | Description
 --------- | ------- | -----------
 password | true | User password
 
+### - Get User Invitation
+```shell
+# Replace `token` with your invitation token
+# Replace `PUBLIC_KEY` with your public key
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/auth/invites/:token -u <PUBLIC_KEY>:
+```
+```javascript
+var authenticationAPI = require('causemo-api-client').authenticationAPI;
+var token = ....;
+return authenticationAPI.getUserInvitation(token)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Fetches the details for a user invitation
+
+* **URL:** `/auth/invites/:token`
+* **METHOD:** GET
+* **TYPE:** public
+
+### - Accept User Invitation 
+```shell
+# Replace `token` with your invitation token
+# Replace `PUBLIC_KEY` with your public key
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{...} https://dev-api.causemo.com/auth/invites/:token -u <PUBLIC_KEY>:
+```
+```javascript
+var authenticationAPI = require('causemo-api-client').authenticationAPI;
+var token = ....;
+var userObj = {...};
+return authenticationAPI.acceptUserInvitation(token, userObj)
+  .then(console.log.bind(undefined))
+  .catch(console.error.bind(undefined));
+```
+Accepts user invitation and creates a new user. It will also check that the user email is currently not associated to another user, if it is, server will ask you to authenticate as that user.
+
+* **URL:** `/auth/invites/:token`
+* **METHOD:** POST
+* **TYPE:** public
+
+#### BODY:
+Parameter | Required | Description
+--------- | ------- | -----------
+password | true | User password
+firstName | true | User first name
+lastName | true | User last name
+title | false | User job title
 
 

@@ -2,57 +2,54 @@
 ## Users
 Contains all endpoints related to the API for Users.
 
-### - Get User Invitation
+### - Get Current User
 ```shell
 # Replace `token` with your invitation token
 # Replace `PUBLIC_KEY` with your public key
-# Replace `PRIVATE_KEY` with your private key
-curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/users/invites/:token -u <PUBLIC_KEY>:<PRIVATE_KEY>
+curl -X GET -H "Content-Type: application/json" -H "api-version: 1" https://dev-api.causemo.com/app/users/me -u <PUBLIC_KEY>:
 ```
 ```javascript
 var appAPI = require('causemo-api-client').appAPI; // get app API
 var userAPI = appAPI.user; // get User endpoint 
-var token = ....;
 var authToken = ....;
-return userAPI.getUserInvitation(authToken, token)
+return userAPI.getUserInfoForToken(authToken)
   .then(console.log.bind(undefined))
   .catch(console.error.bind(undefined));
 ```
-Fetches the details for a user invitation
+Fetch current user information
 
-* **URL:** `/app/users/invites/:token`
+* **URL:** `/app/users/me`
 * **METHOD:** GET
 * **TYPE:** private
 
-### - Accept User Invitation 
+### - Update Current User 
 ```shell
 # Replace `token` with your invitation token
 # Replace `PUBLIC_KEY` with your public key
-# Replace `PRIVATE_KEY` with your private key
-curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{...} https://dev-api.causemo.com/app/users/invites/:token -u <PUBLIC_KEY>:<PRIVATE_KEY>
+curl -X POST -H "Content-Type: application/json" -H "api-version: 1" -d '{...} https://dev-api.causemo.com/app/users/invites/:token -u <PUBLIC_KEY>:
 ```
 ```javascript
 var appAPI = require('causemo-api-client').appAPI; // get app API
 var userAPI = appAPI.user; // get User endpoint 
 var token = ....;
-var authToken = ....;
 var userObj = {...};
-return userAPI.acceptUserInvitation(authToken, token, userObj)
+return userAPI.updateCurrentUser(authToken, userObj)
   .then(console.log.bind(undefined))
   .catch(console.error.bind(undefined));
 ```
-Accepts user invitation and creates a new user. It will also check that the user email is currently not associated to another user, if it is, server will ask you to authenticate as that user.
+Updates the current user information using the provided user object.
 
-* **URL:** `/app/users/invites/:token`
+* **URL:** `/app/users/me`
 * **METHOD:** POST
 * **TYPE:** private
 
 #### BODY:
 Parameter | Required | Description
 --------- | ------- | -----------
-password | true | User password
 firstName | true | User first name
 lastName | true | User last name
 title | false | User job title
+tmpAvatar | false | The temporary S3 location for the user avatar
+password | false | User password, only needed if password changed
 
 
